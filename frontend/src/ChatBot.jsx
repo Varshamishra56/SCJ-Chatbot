@@ -64,7 +64,7 @@ const ChatBot = () => {
             <span className="close-btn" onClick={toggleChat}>
               ×
             </span>
-            FUOYE ChatBot
+            SCJ ChatBot
           </div>
           <div className="chat-messages">
             {messages.map((m, i) => (

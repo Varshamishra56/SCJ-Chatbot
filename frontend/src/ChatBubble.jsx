@@ -55,7 +55,7 @@ const ChatBubble = () => {
     <>
       <div className={`chat-container ${isOpen ? "open" : ""}`}>
         <div className="chat-header">
-          <span>FUOYE ChatBot</span>
+          <span>SCJ ChatBot</span>
           <button className="close-btn" onClick={toggleChat}>
             ×
           </button>
