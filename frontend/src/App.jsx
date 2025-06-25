@@ -1,14 +1,10 @@
-import React from "react";
-import ChatBubble from "./ChatBubble";
+import { useState } from 'react'
+import './App.css'
+import ChatBot from "./components/ChatBot";
 
-const App = () => {
-  return (
-    <div>
-      <h1>Welcome to the Website</h1>
-      {/* Main page content */}
-      <ChatBubble />
-    </div>
-  );
-};
+function App() {
+	return(<ChatBot/>);
+}
 
-export default App;
+
+export default App
