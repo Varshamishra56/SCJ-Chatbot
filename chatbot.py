@@ -13,12 +13,12 @@ nltk.download("punkt")
 nltk.download("stopwords")
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
+CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:5173"])
 
 stop_words = set(stopwords.words("english"))
 
 # Load and preprocess FAQ data
-faq_df = pd.read_csv("FAQS.csv")
+faq_df = pd.read_csv("./FAQs.csv")
 
 def preprocess_text(text):
     tokens = word_tokenize(text.lower())
