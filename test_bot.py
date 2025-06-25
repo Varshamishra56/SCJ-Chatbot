@@ -4,78 +4,15 @@ from sklearn.metrics.pairwise import cosine_similarity
 from nltk.tokenize import word_tokenize
 import string
 import joblib
-
     
 """
-For a real-time retrieval system, considering speed and accuracy, 
-a Vector Space Model and Cosine Similarity.
-
+For a real-time retrieval system, considering speed and accuracy,a Vector Space Model and Cosine Similarity.
 Using numerical vectors is efficienct and Cosine Similarity allows for semantic understanding. 
-
 We use TF-IDF to change text to numerical vectors and cosine similarity to calculate distance in the vector space representation, 
  Using this approach, one can quickly retrieve relevant FAQs based on user queries while still considering semantic similarity.
 
-"""
+"""  
 
-    
-"""
-For a real-time retrieval system, considering speed and accuracy, 
-a Vector Space Model and Cosine Similarity.
-
-Using numerical vectors is efficienct and Cosine Similarity allows for semantic understanding. 
-
-We use TF-IDF to change text to numerical vectors and cosine similarity to calculate distance in the vector space representation, 
- Using this approach, one can quickly retrieve relevant FAQs based on user queries while still considering semantic similarity.
-
-"""
-
-    
-"""
-For a real-time retrieval system, considering speed and accuracy, 
-a Vector Space Model and Cosine Similarity.
-
-Using numerical vectors is efficienct and Cosine Similarity allows for semantic understanding. 
-
-We use TF-IDF to change text to numerical vectors and cosine similarity to calculate distance in the vector space representation, 
- Using this approach, one can quickly retrieve relevant FAQs based on user queries while still considering semantic similarity.
-
-"""
-
-    
-"""
-For a real-time retrieval system, considering speed and accuracy, 
-a Vector Space Model and Cosine Similarity.
-
-Using numerical vectors is efficienct and Cosine Similarity allows for semantic understanding. 
-
-We use TF-IDF to change text to numerical vectors and cosine similarity to calculate distance in the vector space representation, 
- Using this approach, one can quickly retrieve relevant FAQs based on user queries while still considering semantic similarity.
-
-"""
-
-    
-"""
-For a real-time retrieval system, considering speed and accuracy, 
-a Vector Space Model and Cosine Similarity.
-
-Using numerical vectors is efficienct and Cosine Similarity allows for semantic understanding. 
-
-We use TF-IDF to change text to numerical vectors and cosine similarity to calculate distance in the vector space representation, 
- Using this approach, one can quickly retrieve relevant FAQs based on user queries while still considering semantic similarity.
-
-"""
-
-    
-"""
-For a real-time retrieval system, considering speed and accuracy, 
-a Vector Space Model and Cosine Similarity.
-
-Using numerical vectors is efficienct and Cosine Similarity allows for semantic understanding. 
-
-We use TF-IDF to change text to numerical vectors and cosine similarity to calculate distance in the vector space representation, 
- Using this approach, one can quickly retrieve relevant FAQs based on user queries while still considering semantic similarity.
-
-"""
 try:
     from nltk.corpus import stopwords
 except FileNotFoundError:
@@ -118,7 +55,7 @@ def retrieve_faq(query):
 
 
 while True:
-    print("Bot: Ask a question about FUOYE")
+    print("Bot: Ask a question about SCJ")
     query = input("You: ")
     top_5_similar_faqs = retrieve_faq(query)
     

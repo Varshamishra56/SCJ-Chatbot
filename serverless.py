@@ -1,16 +1,4 @@
-"""
-This file does the same thing as chatbot.py but it's a leaner more memory efficient version. 
-The code is optimized to run on systems with limited storage allocations like potatoes and embedded systems.
 
-chatbot.py uses large dependencies that need more than 700mb disk size.
-serverless.py with its dependencies (flask and gensim) barely go above 250 mb disk space
-
-This code may be useful to people that have as servers, old dusty potatoes under a desk, it is ironical, the name of the file. '
-requirements.txt:
-    gensim==4.3.2
-    flask==3.0.2
-    flask_cors==4.0.0
-"""
 import os
 import csv
 import string
