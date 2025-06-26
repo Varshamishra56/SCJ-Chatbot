@@ -11,15 +11,28 @@ const ChatWindow = ({ onClose }) => {
   const [suggestions, setSuggestions] = useState([]);
   const chatRef = useRef(null);
 
-  // Scroll to bottom when messages or suggestions change
-  useLayoutEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTo({
-        top: chatRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [messages, suggestions, isLoading]);
+	useEffect(() => {
+		setMessages([{ sender: 'bot', text: '👋 Hey there! Need help with something? I’m all ears!' }]);
+	}, []);
+
+
+	// Scroll to bottom on update
+	useLayoutEffect(() => {
+		if (chatRef.current) {
+			chatRef.current.scrollTo({
+				top: chatRef.current.scrollHeight,
+				behavior: 'smooth',
+			});
+		}
+	}, [messages, suggestions, isLoading]);
+
+	const handleSuggestionClick = (faq) => {
+		setSuggestions([]);
+		const userSelection = { sender: 'user', text: faq.Question };
+		const botReply = { sender: 'bot', text: faq.Answer };
+		setMessages((prev) => [...prev, userSelection, botReply]);
+	};
+
 
   // 👋 Show welcome message when chat opens
   useEffect(() => {
@@ -58,58 +71,47 @@ const ChatWindow = ({ onClose }) => {
         data.length === 1 &&
         data[0].Answer?.toLowerCase().includes("no relevant answer");
 
-      if (Array.isArray(data) && data.length > 0 && !onlyFallback) {
-        setSuggestions(data);
-      } else {
-        const botMsg = {
-          sender: "bot",
-          text: "Sorry, I couldn't find anything relevant.",
-        };
-        setMessages((prev) => [...prev, botMsg]);
-      }
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "Server error. Try again later." },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+			{/* Chat body */}
+			<div ref={chatRef} className="flex-1 p-2 overflow-y-auto space-y-2">
+				{/* Messages */}
+				{messages.map((msg, idx) => (
+					<motion.div
+						key={`msg-${idx}`}
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ duration: 0.25 }}
+					>
+						<ChatBubble sender={msg.sender} text={msg.text} />
+					</motion.div>
+				))}
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 30, scale: 0.95 }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="fixed bottom-20 right-4 w-80 h-96 bg-white rounded-lg shadow-lg flex flex-col z-50"
-    >
-      {/* Header */}
-      <div className="p-3 border-b bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-t-lg flex justify-between items-center shadow">
-        <span className="text-base tracking-wide">FAQ Assistant</span>
-        <button
-          onClick={onClose}
-          className="text-white text-xl hover:scale-110 transform transition-transform duration-150"
-          aria-label="Close chat"
-        >
-          &times;
-        </button>
-      </div>
+				{/* Suggestions */}
+				{suggestions.length > 0 && (
+					<motion.div
+						key="suggestions-block"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ duration: 0.25 }}
+						className="space-y-1"
+					>
+						<ChatBubble sender="bot" text="Did you mean one of these?" />
+						{suggestions.map((item, idx) => (
+							<div
+								key={`suggestion-${idx}`}
+								onClick={() => handleSuggestionClick(item)}
+								className="cursor-pointer bg-white hover:bg-blue-50 border border-blue-300 text-sm px-4 py-2 rounded-lg shadow transition-all duration-200 hover:scale-[1.02]"
+							>
+								<div className="flex items-start gap-2">
+									<FaRegQuestionCircle className="text-blue-500 shrink-0 mt-1" size={16} />
+									<span className="text-sm">{item.Question}</span>
+								</div>
+							</div>
 
-      {/* Chat body */}
-      <div ref={chatRef} className="flex-1 p-2 overflow-y-auto space-y-2">
-        {/* Messages */}
-        {messages.map((msg, idx) => (
-          <motion.div
-            key={`msg-${idx}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.25 }}
-          >
-            <ChatBubble sender={msg.sender} text={msg.text} />
-          </motion.div>
-        ))}
+						))}
+					</motion.div>
+				)}
+			</div>
+
 
         {/* Suggestions */}
         {suggestions.length > 0 && (
