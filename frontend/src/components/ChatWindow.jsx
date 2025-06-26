@@ -11,16 +11,22 @@ const ChatWindow = ({ onClose }) => {
 	const [suggestions, setSuggestions] = useState([]);
 	const chatRef = useRef(null);
 
+
+	useEffect(() => {
+		setMessages([{ sender: 'bot', text: '👋 Hey there! Need help with something? I’m all ears!' }]);
+	}, []);
+
+
 	// Scroll to bottom on update
-useLayoutEffect(() => {
-	if (chatRef.current) {
-		chatRef.current.scrollTo({
-			top: chatRef.current.scrollHeight,
-			behavior: 'smooth',
-		});
-	}
-}, [messages, suggestions, isLoading]);
-	
+	useLayoutEffect(() => {
+		if (chatRef.current) {
+			chatRef.current.scrollTo({
+				top: chatRef.current.scrollHeight,
+				behavior: 'smooth',
+			});
+		}
+	}, [messages, suggestions, isLoading]);
+
 	const handleSuggestionClick = (faq) => {
 		setSuggestions([]);
 		const userSelection = { sender: 'user', text: faq.Question };
@@ -80,44 +86,44 @@ useLayoutEffect(() => {
 
 			{/* Chat body */}
 			<div ref={chatRef} className="flex-1 p-2 overflow-y-auto space-y-2">
-  {/* Messages */}
-  {messages.map((msg, idx) => (
-    <motion.div
-      key={`msg-${idx}`}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.25 }}
-    >
-      <ChatBubble sender={msg.sender} text={msg.text} />
-    </motion.div>
-  ))}
+				{/* Messages */}
+				{messages.map((msg, idx) => (
+					<motion.div
+						key={`msg-${idx}`}
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ duration: 0.25 }}
+					>
+						<ChatBubble sender={msg.sender} text={msg.text} />
+					</motion.div>
+				))}
 
-  {/* Suggestions */}
-  {suggestions.length > 0 && (
-    <motion.div
-      key="suggestions-block"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.25 }}
-      className="space-y-1"
-    >
-      <ChatBubble sender="bot" text="Did you mean one of these?" />
-      {suggestions.map((item, idx) => (
-        <div
-  key={`suggestion-${idx}`}
-  onClick={() => handleSuggestionClick(item)}
-  className="cursor-pointer bg-white hover:bg-blue-50 border border-blue-300 text-sm px-4 py-2 rounded-lg shadow transition-all duration-200 hover:scale-[1.02]"
->
-  <div className="flex items-start gap-2">
-    <FaRegQuestionCircle className="text-blue-500 shrink-0 mt-1" size={16} />
-    <span className="text-sm">{item.Question}</span>
-  </div>
-</div>
+				{/* Suggestions */}
+				{suggestions.length > 0 && (
+					<motion.div
+						key="suggestions-block"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ duration: 0.25 }}
+						className="space-y-1"
+					>
+						<ChatBubble sender="bot" text="Did you mean one of these?" />
+						{suggestions.map((item, idx) => (
+							<div
+								key={`suggestion-${idx}`}
+								onClick={() => handleSuggestionClick(item)}
+								className="cursor-pointer bg-white hover:bg-blue-50 border border-blue-300 text-sm px-4 py-2 rounded-lg shadow transition-all duration-200 hover:scale-[1.02]"
+							>
+								<div className="flex items-start gap-2">
+									<FaRegQuestionCircle className="text-blue-500 shrink-0 mt-1" size={16} />
+									<span className="text-sm">{item.Question}</span>
+								</div>
+							</div>
 
-      ))}
-    </motion.div>
-  )}
-</div>
+						))}
+					</motion.div>
+				)}
+			</div>
 
 
 			{/* Input box */}
