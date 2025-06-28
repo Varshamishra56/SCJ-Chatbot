@@ -5,3 +5,4 @@ scikit-learn==1.4.2
 nltk==3.8.1
 joblib==1.4.2
 gensim==4.3.2
+gunicorn==23.0.0
