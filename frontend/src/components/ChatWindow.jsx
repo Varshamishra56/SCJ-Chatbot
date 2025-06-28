@@ -1,32 +1,40 @@
-import React, { useState, useRef,useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import ChatBubble from './ChatBubble';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 
-const ChatWindow = ({ onClose }) => {
-	const [messages, setMessages] = useState([]);
-	const [input, setInput] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
-	const [suggestions, setSuggestions] = useState([]);
+const ChatWindow = ({
+	onClose,
+	messages,
+	setMessages,
+	input,
+	setInput,
+	isLoading,
+	setIsLoading,
+	suggestions,
+	setSuggestions,
+}) => {
 	const chatRef = useRef(null);
+	const inputRef = useRef(null);
 
-
+	// Focus input on open
 	useEffect(() => {
-		setMessages([{ sender: 'bot', text: '👋 Hey there! Need help with something? I’m all ears!' }]);
+		inputRef.current?.focus();
 	}, []);
 
-
-	// Scroll to bottom on update
+	// Scroll to bottom on updates
 	useLayoutEffect(() => {
-		if (chatRef.current) {
-			chatRef.current.scrollTo({
+		const timeout = setTimeout(() => {
+			chatRef.current?.scrollTo({
 				top: chatRef.current.scrollHeight,
 				behavior: 'smooth',
 			});
-		}
+		}, 100);
+		return () => clearTimeout(timeout);
 	}, [messages, suggestions, isLoading]);
 
+	// Handle suggestion click
 	const handleSuggestionClick = (faq) => {
 		setSuggestions([]);
 		const userSelection = { sender: 'user', text: faq.Question };
@@ -34,6 +42,7 @@ const ChatWindow = ({ onClose }) => {
 		setMessages((prev) => [...prev, userSelection, botReply]);
 	};
 
+	// Send user message
 	const sendMessage = async () => {
 		if (!input.trim()) return;
 
@@ -43,7 +52,9 @@ const ChatWindow = ({ onClose }) => {
 		setIsLoading(true);
 
 		try {
-			const res = await axios.post('http://localhost:5000/ask', { query: userMsg.text });
+			const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/ask`, {
+				query: userMsg.text,
+			});
 			const data = res.data;
 
 			const onlyFallback =
@@ -54,11 +65,17 @@ const ChatWindow = ({ onClose }) => {
 			if (Array.isArray(data) && data.length > 0 && !onlyFallback) {
 				setSuggestions(data);
 			} else {
-				const botMsg = { sender: 'bot', text: "Sorry, I couldn't find anything relevant." };
+				const botMsg = {
+					sender: 'bot',
+					text: "Sorry, I couldn't find anything relevant.",
+				};
 				setMessages((prev) => [...prev, botMsg]);
 			}
 		} catch {
-			setMessages((prev) => [...prev, { sender: 'bot', text: 'Server error. Try again later.' }]);
+			setMessages((prev) => [
+				...prev,
+				{ sender: 'bot', text: 'Server error. Try again later.' },
+			]);
 		} finally {
 			setIsLoading(false);
 		}
@@ -84,9 +101,8 @@ const ChatWindow = ({ onClose }) => {
 				</button>
 			</div>
 
-			{/* Chat body */}
+			{/* Messages + Suggestions */}
 			<div ref={chatRef} className="flex-1 p-2 overflow-y-auto space-y-2">
-				{/* Messages */}
 				{messages.map((msg, idx) => (
 					<motion.div
 						key={`msg-${idx}`}
@@ -98,7 +114,6 @@ const ChatWindow = ({ onClose }) => {
 					</motion.div>
 				))}
 
-				{/* Suggestions */}
 				{suggestions.length > 0 && (
 					<motion.div
 						key="suggestions-block"
@@ -119,16 +134,15 @@ const ChatWindow = ({ onClose }) => {
 									<span className="text-sm">{item.Question}</span>
 								</div>
 							</div>
-
 						))}
 					</motion.div>
 				)}
 			</div>
 
-
-			{/* Input box */}
+			{/* Input */}
 			<div className="p-2 border-t flex gap-2">
 				<input
+					ref={inputRef}
 					className="flex-1 border rounded p-1 text-sm"
 					value={input}
 					onChange={(e) => setInput(e.target.value)}
