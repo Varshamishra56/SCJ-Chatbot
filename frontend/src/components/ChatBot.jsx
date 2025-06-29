@@ -6,10 +6,15 @@ import { AnimatePresence } from "framer-motion";
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Persist messages and suggestions between opens
+  // Persist chat state
   const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hi there! How can I help you today?" },
+    {
+      sender: "bot",
+      text: "👋 Hey there! Need help with something? I’m all ears!",
+    },
   ]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
 
   return (
@@ -28,10 +33,16 @@ const ChatBot = () => {
           <ChatWindow
             key="chat"
             onClose={() => setIsOpen(false)}
-            messages={messages}
-            setMessages={setMessages}
-            suggestions={suggestions}
-            setSuggestions={setSuggestions}
+            {...{
+              messages,
+              setMessages,
+              suggestions,
+              setSuggestions,
+              input,
+              setInput,
+              isLoading,
+              setIsLoading,
+            }}
           />
         )}
       </AnimatePresence>

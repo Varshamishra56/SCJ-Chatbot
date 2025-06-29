@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
+import React, { useRef, useEffect, useLayoutEffect } from "react";
 import axios from "axios";
 import ChatBubble from "./ChatBubble";
 import { AnimatePresence, motion } from "framer-motion";
@@ -8,23 +8,33 @@ const ChatWindow = ({
   onClose,
   messages,
   setMessages,
+  input,
+  setInput,
+  isLoading,
+  setIsLoading,
   suggestions,
   setSuggestions,
 }) => {
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const chatRef = useRef(null);
+  const inputRef = useRef(null);
 
-  // Scroll to bottom on update
+  // Focus input on open
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  // Scroll to bottom on updates
   useLayoutEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTo({
+    const timeout = setTimeout(() => {
+      chatRef.current?.scrollTo({
         top: chatRef.current.scrollHeight,
         behavior: "smooth",
       });
-    }
+    }, 100);
+    return () => clearTimeout(timeout);
   }, [messages, suggestions, isLoading]);
 
+  // Handle suggestion click
   const handleSuggestionClick = (faq) => {
     setSuggestions([]);
     const userSelection = { sender: "user", text: faq.Question };
@@ -32,6 +42,7 @@ const ChatWindow = ({
     setMessages((prev) => [...prev, userSelection, botReply]);
   };
 
+  // Send user message
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -90,9 +101,8 @@ const ChatWindow = ({
         </button>
       </div>
 
-      {/* Chat body */}
+      {/* Messages + Suggestions */}
       <div ref={chatRef} className="flex-1 p-2 overflow-y-auto space-y-2">
-        {/* Messages */}
         {messages.map((msg, idx) => (
           <motion.div
             key={`msg-${idx}`}
@@ -104,7 +114,6 @@ const ChatWindow = ({
           </motion.div>
         ))}
 
-        {/* Suggestions */}
         {suggestions.length > 0 && (
           <motion.div
             key="suggestions-block"
@@ -133,9 +142,10 @@ const ChatWindow = ({
         )}
       </div>
 
-      {/* Input box */}
+      {/* Input */}
       <div className="p-2 border-t flex gap-2">
         <input
+          ref={inputRef}
           className="flex-1 border rounded p-1 text-sm"
           value={input}
           onChange={(e) => setInput(e.target.value)}
