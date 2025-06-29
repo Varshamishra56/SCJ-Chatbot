@@ -1,20 +1,19 @@
-import React, { useState, useRef, useLayoutEffect, useEffect } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import axios from "axios";
 import ChatBubble from "./ChatBubble";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
-const ChatWindow = ({ onClose }) => {
-  const [messages, setMessages] = useState([]);
+const ChatWindow = ({
+  onClose,
+  messages,
+  setMessages,
+  suggestions,
+  setSuggestions,
+}) => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState([]);
   const chatRef = useRef(null);
-  useEffect(() => {
-    setMessages([
-      { sender: "bot", text: "Hi there! How can I help you today?" },
-    ]);
-  }, []);
 
   // Scroll to bottom on update
   useLayoutEffect(() => {

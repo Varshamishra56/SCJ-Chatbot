@@ -6,6 +6,12 @@ import { AnimatePresence } from "framer-motion";
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Persist messages and suggestions between opens
+  const [messages, setMessages] = useState([
+    { sender: "bot", text: "Hi there! How can I help you today?" },
+  ]);
+  const [suggestions, setSuggestions] = useState([]);
+
   return (
     <>
       {/* Floating bubble icon */}
@@ -18,7 +24,16 @@ const ChatBot = () => {
 
       {/* AnimatePresence wraps conditional render */}
       <AnimatePresence mode="wait">
-        {isOpen && <ChatWindow key="chat" onClose={() => setIsOpen(false)} />}
+        {isOpen && (
+          <ChatWindow
+            key="chat"
+            onClose={() => setIsOpen(false)}
+            messages={messages}
+            setMessages={setMessages}
+            suggestions={suggestions}
+            setSuggestions={setSuggestions}
+          />
+        )}
       </AnimatePresence>
     </>
   );
