@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaCommentDots } from "react-icons/fa";
 import ChatWindow from "./ChatWindow";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +10,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: "👋 Hey there! Need help with something? I’m all ears!",
+      text: `👋 Hey there! Need help with something? 🤖`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -19,13 +19,27 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* Floating bubble icon */}
-      <div
-        className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full shadow-lg cursor-pointer z-50"
-        onClick={() => setIsOpen(!isOpen)}
+      {/* Floating bubble icon with tooltip and animation */}
+      <motion.div
+        className="fixed bottom-4 right-4 z-50"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
       >
-        <FaCommentDots />
-      </div>
+        <div className="relative group">
+          <div
+            className="bg-blue-600 text-white p-4 rounded-full shadow-lg cursor-pointer animate-pulse hover:animate-none"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <FaCommentDots size={24} />
+          </div>
+          {!isOpen && (
+            <div className="absolute bottom-14 right-1/2 translate-x-1/2 bg-black text-white text-xs px-3 py-1 rounded shadow opacity-80 group-hover:opacity-100 transition-opacity duration-200">
+              Need help? Click me!
+            </div>
+          )}
+        </div>
+      </motion.div>
 
       {/* AnimatePresence wraps conditional render */}
       <AnimatePresence mode="wait">
