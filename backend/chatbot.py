@@ -19,7 +19,7 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:5173"])
 
 # Load and preprocess FAQ data
-faq_path = "FAQS.csv"  # Consistent filename
+faq_path = "FAQs.csv"  # Consistent filename
 faq_df = pd.read_csv(faq_path)
 
 # Define stopwords
